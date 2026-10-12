@@ -228,3 +228,4 @@ body.fx { background: var(--page-bg, var(--bg)); transition: background-color 1.
 body.fx main > section, body.fx main > section.alt { background: transparent; border-block-color: transparent; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
 body.fx .reveal { opacity: var(--o, 1); transform: translateY(var(--ty, 0px)); transition: none; will-change: opacity, transform; }
 html:has(body.fx) { background: transparent; }
+.foot-in .contacto a { text-decoration: underline; }
