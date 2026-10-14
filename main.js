@@ -42,10 +42,10 @@
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && body.classList.contains('menu-open')) setMenu(false); });
   matchMedia('(min-width: 861px)').addEventListener('change', (m) => { if (m.matches && body.classList.contains('menu-open')) setMenu(false); });
 
-  /* ---------- Cuenta regresiva fija: 9/11/2026 23:59 (Colombia, UTC-5), igual para todos ---------- */
+  /* ---------- Cuenta regresiva fija: 30/10/2026 23:59 (Colombia, UTC-5), igual para todos ---------- */
   const cuenta = document.getElementById('cuenta-t');
   if (cuenta) {
-    const fin = Date.parse('2026-11-09T23:59:59-05:00');
+    const fin = Date.parse('2026-10-30T23:59:59-05:00');
     const tick = () => {
       const d = fin - Date.now();
       if (d <= 0) { cuenta.textContent = 'La oferta terminó'; clearInterval(t); return; }
