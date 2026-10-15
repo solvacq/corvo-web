@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0d0d0d" />
+<meta name="robots" content="noindex" />
+<title>Tu pedido | Corvo</title>
+<meta name="description" content="Estado de tu pedido de instalación de Corvo." />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="pedidos.css" />
+</head>
+<body class="pg">
+<header class="pg-top"><div class="wrap"><a class="brand" href="index.html" aria-label="Corvo, inicio"><span>Corvo</span></a><a class="btn btn-sm btn-ghost" href="index.html">Volver al sitio</a></div></header>
+<main class="pg-main" id="app">
+<h1>Tu pedido</h1>
+<p id="msg" class="aviso" role="status">Cargando tu pedido…</p>
+<section id="det" hidden>
+  <div class="tarjeta">
+    <p class="lead" style="margin:0">Referencia <strong id="ref"></strong> · <span id="tipo"></span></p>
+    <p class="monto" id="monto"></p>
+    <p style="margin-top:10px"><span class="estado" id="est"></span></p>
+    <p class="lead" id="nota"></p>
+  </div>
+  <div class="tarjeta" id="pago">
+    <h2 style="font-size:1.1rem">Cómo pagar</h2>
+    <p class="pre" id="instr"></p>
+    <div class="qr" id="qr" hidden><img alt="QR de pago" /></div>
+    <p class="lead" style="font-size:13px;margin-top:12px">Paga el valor exacto y escribe la referencia. Confirmamos cada transferencia a mano; no hay cobro automático.</p>
+  </div>
+  <div class="tarjeta">
+    <h2 style="font-size:1.1rem">Descarga</h2>
+    <p class="lead" id="desc"></p>
+    <button class="btn" id="bloq" type="button" disabled>Descargar</button>
+  </div>
+  <button class="btn btn-ghost" id="ref2" type="button">Actualizar estado</button>
+</section>
+</main>
+<script src="pedidos.js"></script>
+<script>
+(async () => {
+  const t = new URLSearchParams(location.hash.slice(1)).get('t')
+  const $ = (id) => document.getElementById(id), msg = $('msg')
+  if (!t) { msg.textContent = 'Falta el enlace de tu pedido. Usa el enlace que te enviamos al correo.'; msg.classList.add('err'); return }
+  const textos = { pendiente_pago: 'Esperando tu pago', pagado: 'Pago confirmado', completado: 'Completado' }
+  const desc = { bloqueada: 'Se habilita cuando confirmemos tu pago.', enviada: 'Te enviamos el enlace de descarga a tu correo. Ábrelo desde ahí; sirve una sola vez.', completada: 'La descarga ya se completó. Si necesitas otro enlace, escríbenos y te lo enviamos.', vencida: 'El enlace venció. Escríbenos y te enviamos otro.' }
+  async function cargar() {
+    try {
+      const p = await api('/v1/pedidos/' + encodeURIComponent(t))
+      msg.hidden = true; $('det').hidden = false
+      $('ref').textContent = p.referencia; $('tipo').textContent = p.tipo_nombre; $('monto').textContent = cop(p.monto)
+      const e = $('est'); e.textContent = textos[p.estado] || p.estado; e.classList.toggle('ok', p.estado !== 'pendiente_pago')
+      $('nota').textContent = p.nombre ? 'Hola, ' + p.nombre + '.' : ''
+      $('instr').textContent = p.instrucciones_pago || ''
+      $('pago').hidden = p.estado !== 'pendiente_pago'
+      if (p.qr_disponible && !$('qr').dataset.cargado) { const im = $('qr').querySelector('img'); im.onload = () => { $('qr').hidden = false }; im.src = CORVO_API + (p.qr_url || '/v1/pedidos/' + encodeURIComponent(t) + '/qr'); $('qr').dataset.cargado = '1' }
+      $('desc').textContent = desc[p.descarga] || ''
+      $('bloq').hidden = p.descarga !== 'bloqueada'
+    } catch (x) {
+      msg.hidden = false; msg.classList.add('err'); $('det').hidden = x.status === 404 ? true : $('det').hidden
+      msg.textContent = x.status === 404 ? 'No encontramos ese pedido. Revisa el enlace del correo.' : 'No pudimos consultar tu pedido. Inténtalo de nuevo en un momento.'
+    }
+  }
+  $('ref2').addEventListener('click', cargar)
+  await cargar(); setInterval(cargar, 30000)
+})()
+</script>
+</body>
+</html>

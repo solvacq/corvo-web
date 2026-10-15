@@ -1,0 +1,29 @@
+/* Páginas de compra, pedido y descarga (se apoyan en style.css) */
+body.pg { min-height: 100vh; }
+.pg-top { border-bottom: 1px solid var(--line); }
+.pg-top .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 64px; }
+.pg-main { width: min(100% - 32px, 560px); margin: 0 auto; padding: 40px 0 72px; }
+.pg-main h1 { font-family: var(--f-display); font-weight: var(--d-weight); font-size: clamp(2rem, 6vw, 2.75rem); line-height: 1.1; letter-spacing: var(--d-track); }
+.pg-main .lead { color: var(--muted); margin-top: 8px; }
+.tarjeta { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; margin-top: 20px; }
+.opciones { display: grid; gap: 10px; margin-top: 20px; }
+.opcion { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); cursor: pointer; }
+.opcion:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.opcion input { accent-color: var(--accent); }
+.opcion .pr { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.opcion .pr s { color: var(--muted); font-weight: 400; margin-right: 6px; }
+.campo { display: block; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.campo input[type=text], .campo input[type=email], .campo input[type=tel] { display: block; width: 100%; min-height: 48px; margin-top: 6px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; }
+.campo input:focus { border-color: var(--accent); outline: none; }
+.chk { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 14px; }
+.chk input { margin-top: 4px; accent-color: var(--accent); }
+.aviso { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); font-size: 14px; }
+.aviso.err { border: 1px solid #7a3b2b; color: #f0a58a; }
+.monto { font-variant-numeric: tabular-nums; font-family: var(--f-display); font-size: 2.5rem; line-height: 1; margin-top: 6px; }
+.estado { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 13px; background: var(--surface-2); color: var(--muted); }
+.estado.ok { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-line); }
+.qr { background: #fff; border-radius: 14px; padding: 10px; width: 220px; margin: 16px auto 0; }
+.qr img { width: 100%; height: auto; }
+.pre { white-space: pre-line; margin-top: 12px; font-size: 14px; }
+.btn[disabled], .btn.off { opacity: .45; cursor: not-allowed; pointer-events: none; }
+.pg-main .btn { width: 100%; margin-top: 18px; }

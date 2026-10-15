@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0d0d0d" />
+<meta name="robots" content="noindex" />
+<title>Descargar Corvo | Corvo</title>
+<meta name="description" content="Descarga el instalador de Corvo con tu enlace personal." />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="pedidos.css" />
+</head>
+<body class="pg">
+<header class="pg-top"><div class="wrap"><a class="brand" href="index.html" aria-label="Corvo, inicio"><span>Corvo</span></a><a class="btn btn-sm btn-ghost" href="index.html">Volver al sitio</a></div></header>
+<main class="pg-main" id="app">
+<h1>Descargar Corvo</h1>
+<p id="msg" class="aviso" role="status">Revisando tu enlace…</p>
+<section id="ok" class="tarjeta" hidden>
+  <p class="lead" style="margin:0">Referencia <strong id="ref"></strong></p>
+  <p style="margin-top:8px"><strong id="arch"></strong> · <span id="tam"></span></p>
+  <p class="lead" style="font-size:13px">El enlace sirve una sola vez y vence a los 14 días. Si la descarga se corta, puedes retomarla con este mismo enlace.</p>
+  <form id="f" method="post"><button class="btn" type="submit">Descargar</button></form>
+</section>
+</main>
+<script src="pedidos.js"></script>
+<script>
+(async () => {
+  const s = new URLSearchParams(location.hash.slice(1)).get('e'), msg = document.getElementById('msg')
+  const mal = (t) => { msg.textContent = t; msg.classList.add('err') }
+  if (!s) return mal('Falta el enlace de descarga. Usa el que te enviamos al correo.')
+  try {
+    const d = await api('/v1/descargas/' + encodeURIComponent(s))
+    msg.hidden = true; document.getElementById('ok').hidden = false
+    document.getElementById('ref').textContent = d.referencia; document.getElementById('arch').textContent = d.nombre_archivo
+    document.getElementById('tam').textContent = (d.tamano_bytes / 1048576).toFixed(1).replace('.', ',') + ' MB'
+    document.getElementById('f').action = CORVO_API + '/v1/descargas/' + encodeURIComponent(s)   // solo POST entrega el archivo
+  } catch (x) {
+    mal(x.status === 410 ? 'Este enlace venció. Escríbenos por WhatsApp y te enviamos otro.' : x.status === 429 ? 'Hubo demasiados intentos. Espera un momento o escríbenos por WhatsApp.' : x.status === 503 ? 'El instalador no está disponible ahora. Escríbenos por WhatsApp.' : 'Este enlace ya se usó o no es válido. Escríbenos por WhatsApp y te enviamos otro.')
+  }
+})()
+</script>
+</body>
+</html>
