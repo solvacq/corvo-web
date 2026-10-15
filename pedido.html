@@ -34,7 +34,6 @@
   <div class="tarjeta">
     <h2 style="font-size:1.1rem">Descarga</h2>
     <p class="lead" id="desc"></p>
-    <button class="btn" id="bloq" type="button" disabled>Descargar</button>
   </div>
   <button class="btn btn-ghost" id="ref2" type="button">Actualizar estado</button>
 </section>
@@ -46,7 +45,7 @@
   const $ = (id) => document.getElementById(id), msg = $('msg')
   if (!t) { msg.textContent = 'Falta el enlace de tu pedido. Usa el enlace que te enviamos al correo.'; msg.classList.add('err'); return }
   const textos = { pendiente_pago: 'Esperando tu pago', pagado: 'Pago confirmado', completado: 'Completado' }
-  const desc = { bloqueada: 'Se habilita cuando confirmemos tu pago.', enviada: 'Te enviamos el enlace de descarga a tu correo. Ábrelo desde ahí; sirve una sola vez.', completada: 'La descarga ya se completó. Si necesitas otro enlace, escríbenos y te lo enviamos.', vencida: 'El enlace venció. Escríbenos y te enviamos otro.' }
+  const desc = { bloqueada: 'Se habilita cuando confirmemos tu pago.', enviada: 'Revisa tu correo: ahí está tu enlace de descarga (sirve una sola vez). Si no te llega, escríbenos a founder@solvacq.com o por WhatsApp.', completada: 'Descarga completada.', vencida: 'Tu enlace venció; escríbenos y te enviamos otro.' }
   async function cargar() {
     try {
       const p = await api('/v1/pedidos/' + encodeURIComponent(t))
@@ -58,7 +57,6 @@
       $('pago').hidden = p.estado !== 'pendiente_pago'
       if (p.qr_disponible && !$('qr').dataset.cargado) { const im = $('qr').querySelector('img'); im.onload = () => { $('qr').hidden = false }; im.src = CORVO_API + (p.qr_url || '/v1/pedidos/' + encodeURIComponent(t) + '/qr'); $('qr').dataset.cargado = '1' }
       $('desc').textContent = desc[p.descarga] || ''
-      $('bloq').hidden = p.descarga !== 'bloqueada'
     } catch (x) {
       msg.hidden = false; msg.classList.add('err'); $('det').hidden = x.status === 404 ? true : $('det').hidden
       msg.textContent = x.status === 404 ? 'No encontramos ese pedido. Revisa el enlace del correo.' : 'No pudimos consultar tu pedido. Inténtalo de nuevo en un momento.'
