@@ -20,7 +20,7 @@
 <p id="msg" class="aviso" role="status">Revisando tu enlace…</p>
 <section id="ok" class="tarjeta" hidden>
   <p class="lead" style="margin:0">Referencia <strong id="ref"></strong></p>
-  <p style="margin-top:8px"><strong id="arch"></strong> · <span id="tam"></span></p>
+  <p style="margin-top:8px"><span id="ver"></span><strong id="arch"></strong> · <span id="tam"></span></p>
   <p class="lead" style="font-size:13px">El enlace sirve una sola vez y vence a los 14 días. Si la descarga se corta, puedes retomarla con este mismo enlace.</p>
   <form id="f" method="post"><button class="btn" type="submit">Descargar</button></form>
 </section>
@@ -35,6 +35,8 @@
     const d = await api('/v1/descargas/' + encodeURIComponent(s))
     msg.hidden = true; document.getElementById('ok').hidden = false
     document.getElementById('ref').textContent = d.referencia; document.getElementById('arch').textContent = d.nombre_archivo
+    // Versión del instalador que se entrega, leída del nombre que informa el Worker (dato vivo); si no se puede leer, no se muestra nada.
+    const v = /(\d+\.\d+\.\d+)/.exec(String(d.nombre_archivo || '')); document.getElementById('ver').textContent = v ? 'Versión ' + v[1] + ' · ' : ''
     document.getElementById('tam').textContent = (d.tamano_bytes / 1048576).toFixed(1).replace('.', ',') + ' MB'
     document.getElementById('f').action = CORVO_API + '/v1/descargas/' + encodeURIComponent(s)   // solo POST entrega el archivo
   } catch (x) {
