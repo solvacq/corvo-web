@@ -10,3 +10,10 @@ window.api = async (ruta, opciones) => {
   return cuerpo
 }
 window.el = (tag, props = {}, ...hijos) => { const n = document.createElement(tag); Object.assign(n, props); n.append(...hijos); return n }
+
+/* Texto oficial de reembolso: sale del servidor (GET /v1/config → reembolso.texto); si no llega, queda la frase fija del HTML. */
+window.addEventListener('DOMContentLoaded', async () => {
+  const sitios = document.querySelectorAll('[data-reembolso]')
+  if (!sitios.length) return
+  try { const c = await api('/v1/config'); const t = c && c.reembolso && c.reembolso.texto; if (t) sitios.forEach((e) => { e.textContent = t }) } catch { /* se queda la frase fija */ }
+})

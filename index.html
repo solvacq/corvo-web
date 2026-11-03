@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="dark" />
-<meta name="theme-color" content="#0d0d0d" />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#ffffff" />
 <title>Corvo | Vende, controla tu inventario y cierra caja</title>
 <meta name="description" content="Punto de venta, inventario, compras y cierre de caja sin cobro por usuario ni por sede. Funciona sin internet y tus datos viven en tu propio equipo." />
+<link rel="icon" href="favicon.ico" sizes="any" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
 <link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16" />
@@ -26,10 +27,9 @@
 <meta name="twitter:title" content="Corvo | Vende, controla tu inventario y cierra caja" />
 <meta name="twitter:description" content="Punto de venta, inventario, compras y cierre de caja sin cobro por usuario ni por sede. Funciona sin internet y tus datos viven en tu propio equipo." />
 <meta name="twitter:image" content="https://corvo.solvacq.com/og.png" />
-<style>html{background:#000}</style>
-<link rel="preload" href="assets/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+<style>html{background:#fff}</style>
+<link rel="preload" href="assets/fonts/source-serif-4-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="stylesheet" href="vendor/lenis.css" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -50,7 +50,7 @@
   <div class="nav-in">
     <a class="brand" href="#inicio" aria-label="Corvo, inicio"><svg class="logo" aria-hidden="true"><use href="#cuervo"/></svg><span>Corvo</span></a>
     <nav class="links" aria-label="Principal">
-      <a href="#que-es">Qué es</a><a href="#beneficios">Beneficios</a><a href="#precios">Precios</a><a href="#comparacion">Comparación</a><a href="#instalar">Instalar</a><a href="#preguntas">Preguntas</a>
+      <a href="#que-es">Qué es</a><a href="#precios">Precios</a><a href="#preguntas">Preguntas</a>
     </nav>
     <div class="actions">
       <a class="btn btn-sm" href="comprar.html">Pedir instalación</a>
@@ -60,101 +60,76 @@
 </header>
 <div class="panel" id="panel" aria-hidden="true">
   <nav aria-label="Menú móvil">
-    <a href="#que-es">Qué es</a><a href="#beneficios">Beneficios</a><a href="#precios">Precios</a><a href="#comparacion">Comparación</a><a href="#instalar">Instalar</a><a href="#preguntas">Preguntas</a>
+    <a href="#que-es">Qué es</a><a href="#precios">Precios</a><a href="#preguntas">Preguntas</a>
   </nav>
-  <a class="btn btn-lg-m" href="comprar.html">Pedir mi instalación</a>
+  <a class="btn" href="comprar.html">Pedir instalación</a>
 </div>
 
 <main id="contenido">
-  <!-- HERO -->
-  <section class="hero" id="inicio" data-bg="#0d0d0d" aria-labelledby="titulo">
-    <video id="intro" class="hero-video" muted playsinline preload="auto" poster="assets/portada-720.jpg" aria-hidden="true" tabindex="-1"></video>
-    <div class="hero-shade" aria-hidden="true"></div>
-
-    <div class="intro-controls" id="controls">
-      <button class="chip" id="sound" type="button" aria-pressed="false" aria-label="Activar sonido">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="on" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg>
-        <span id="sound-label">Activar sonido</span>
-      </button>
-      <button class="chip" id="skip" type="button">Omitir intro</button>
-    </div>
-
-    <div class="hero-content" id="heroContent">
-      <h1 id="titulo">Corvo</h1>
-      <p class="slogan">Tu negocio, con o sin internet.</p>
-      <p class="sub">Punto de venta y contabilidad que viven en tu propio equipo. Para PC y celular.</p>
+  <section class="hero" id="inicio" aria-labelledby="titulo">
+    <div class="wrap">
+      <h1 id="titulo">Tu negocio no se detiene<br class="d-br" /> cuando se cae el internet.</h1>
+      <p class="sub">Punto de venta y contabilidad básica que viven en tu propio equipo. Para PC y celular.</p>
       <div class="cta">
         <a class="btn" href="comprar.html">Pedir mi instalación</a>
-        <a class="btn btn-ghost" href="#que-es">Conocer Corvo</a>
+        <a class="btn btn-ghost" href="#precios">Ver planes</a>
       </div>
-      <button class="replay" id="replay" type="button">Ver intro otra vez</button>
     </div>
   </section>
 
-  <!-- QUÉ ES -->
-  <section class="sec" id="que-es" data-bg="#101010" aria-labelledby="h-que-es">
-    <div class="wrap narrow reveal">
-      <p class="eyebrow">Qué es</p>
-      <h2 id="h-que-es">Caja y cuentas, en tu negocio.</h2>
-      <p class="lead">Corvo es un punto de venta con contabilidad básica que funciona en un computador de tu negocio, sin depender de internet. Los celulares se conectan por el Wi-Fi local para vender, consultar inventario y ver reportes.</p>
-      <ul class="pills" aria-label="Características principales">
-        <li>Punto de venta</li><li>Contabilidad básica</li><li>Inventario</li><li>Caja y reportes</li><li>PC y celular</li><li>Sin internet</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- BENEFICIOS -->
-  <section class="sec alt" id="beneficios" data-bg="#15130f" aria-labelledby="h-ben">
+  <section class="sec" id="que-es" aria-labelledby="h-que-es">
     <div class="wrap">
-      <div class="reveal"><p class="eyebrow">Beneficios</p><h2 id="h-ben">Hecho para trabajar todos los días.</h2></div>
-      <div class="grid4">
-        <article class="card reveal"><div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M3 3l18 18"/></svg></div><h3>Sin internet</h3><p>Vende y registra aunque se caiga la red. Tu operación no depende de un servicio externo.</p></article>
-        <article class="card reveal"><div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5v14M7 5v14M11 5v14M14 5v14M18 5v14M20 5v14"/></svg></div><h3>Fácil para el cajero</h3><p>Escanea el código de barras y cobra en pocos toques. Pantallas claras para quien empieza hoy.</p></article>
-        <article class="card reveal"><div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Tus datos son tuyos</h3><p>La información se guarda en tu equipo, con copias de respaldo que tú controlas.</p></article>
-        <article class="card reveal"><div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="14" height="10" rx="1.5"/><path d="M6 19h6M9 15v4"/><rect x="18" y="8" width="4" height="9" rx="1"/></svg></div><h3>PC y celular</h3><p>El computador es el servidor; los celulares se conectan por Wi-Fi local y siguen útiles si se pierde la señal.</p></article>
+      <h2 id="h-que-es">Todo tu negocio, en un solo lugar</h2>
+      <div class="show">
+        <div class="feats" id="feats">
+          <details name="funciones" open><summary>Vende</summary><p>Escanea el código de barras y cobra en pocos toques, con pago mixto y recibo. Pantallas claras para quien empieza hoy.</p></details>
+          <details name="funciones"><summary>Inventario</summary><p>Entradas, compras y kardex en un solo lugar. Alertas de stock bajo y carga de productos desde Excel o CSV.</p></details>
+          <details name="funciones"><summary>Caja y reportes</summary><p>Cierre de caja con historial y reportes de ventas al día. Usuarios ilimitados, con roles.</p></details>
+          <details name="funciones"><summary>Sin internet</summary><p>Vende aunque se caiga la red. Tus datos viven en tu equipo y los celulares se conectan por el Wi-Fi local.</p></details>
+        </div>
+        <figure class="frame"><img src="assets/captura-app.jpg" width="1600" height="907" loading="lazy" decoding="async" alt="Pantalla de venta de Corvo en un computador" /></figure>
       </div>
     </div>
   </section>
 
-  <!-- PRECIOS -->
-  <section class="sec alt" id="precios" data-bg="#1a160d" aria-labelledby="h-precios">
-    <div class="wrap">
-      <div class="reveal"><p class="eyebrow">Oferta de lanzamiento</p><h2 id="h-precios">Todo incluido, elijas el plan que elijas.</h2>
-        <p class="lead">Compras, kardex y control de caja al precio de un POS básico. 3 PCs incluidas en el plan; la instalación asistida se paga una sola vez, aparte. Ambos planes incluyen soporte y actualizaciones.</p>
-        <p class="countdown" id="cuenta" aria-live="off"><strong>La oferta expira el 30 de oct. de 2026</strong><span id="cuenta-t" class="cuenta-t">—</span></p>
-      </div>
-      <div class="grid2 reveal">
+  <section class="sec alt" id="precios" aria-labelledby="h-precios">
+    <div class="wrap center">
+      <h2 id="h-precios">Dos planes. Todo incluido.</h2>
+      <p class="lead">3 PCs incluidas, soporte por WhatsApp y actualizaciones en ambos planes.</p>
+      <div class="grid2">
         <article class="plan"><h3>Mensual</h3>
-          <p class="old"><s>$149.900</s> <span class="sr">precio regular desde el 31 de oct. de 2026</span></p>
-          <p class="price">$99.900 <span>COP / mes</span></p>
-          <p class="small">Precio de lanzamiento hasta el 30 de oct. de 2026. Desde el 31 de oct. de 2026: $149.900 al mes.</p></article>
+          <p class="price">$149.900 <span>COP / mes</span></p>
+          <p class="small">Sin permanencia.</p></article>
         <article class="plan best"><h3>Anual <span class="tag">2 meses gratis</span></h3>
-          <p class="old"><s>$1.499.000</s> <span class="sr">precio regular desde el 31 de oct. de 2026</span></p>
-          <p class="price">$999.000 <span>COP / año</span></p>
-          <p class="small">Pagas 10 meses y usas 12. Precio de lanzamiento hasta el 30 de oct. de 2026; desde el 31 de oct. de 2026: $1.499.000 al año.</p></article>
+          <p class="price">$1.499.000 <span>COP / año</span></p>
+          <p class="small">Pagas 10 meses y usas 12.</p></article>
       </div>
-      <ul class="values reveal">
-        <li><strong>3 PCs incluidas</strong> <span>en cualquiera de los dos planes</span></li>
-        <li><strong>Instalación asistida desde $149.000</strong> <span>pago único, aparte del plan. Hasta el 30 de oct. de 2026: $149.000; con migración desde Aronium $249.000; PC adicional $79.000. Desde el 31 de oct. de 2026: $249.000, $449.000 y $129.000. <a href="comprar.html">Pedir instalación</a></span></li>
-        <li><strong>Sin permanencia y datos exportables</strong></li>
-        <li><strong>Funciona sin internet</strong></li>
-        <li><strong>Prueba gratis 7 días</strong> <span>empieza dentro de la app, cuando eliges tu plan, una sola vez por negocio. Sin tarjeta: si decides continuar, pagas por QR. Te avisamos por correo un día antes de que termine</span></li>
-        <li><strong>Garantía de devolución en el plan anual</strong> <span>7 días desde el pago: si no te sirve, escríbenos por WhatsApp y te devolvemos tu dinero</span></li>
-        <li><strong>Mismo Corvo en ambas modalidades</strong> <span>sin cobro por usuario, por sede ni tope de ventas</span></li>
-        <li><strong>Plan anual con 2 meses gratis</strong></li>
-        <li><strong>Precio congelado</strong> <span>si contratas hasta el 30 de oct. de 2026, conservas ese precio mientras tu plan siga activo</span></li>
-        <li><strong>Soporte por WhatsApp</strong></li>
-      </ul>
-      <p class="note"><strong>Importante:</strong> Corvo <strong>no incluye facturación electrónica DIAN</strong>. Está pensado para negocios que ya facturan con otro sistema y quieren llevar caja, inventario y compras en un solo lugar.</p>
+      <p class="note">La instalación asistida se paga una sola vez, aparte del plan. <span data-reembolso>Reembolso dentro de los 7 días siguientes al pago, en ambos planes.</span></p>
+      <div class="cta"><a class="btn" href="comprar.html">Pedir mi instalación</a></div>
     </div>
   </section>
 
-  <!-- COMPARACIÓN -->
-  <section class="sec" id="comparacion" data-bg="#111111" aria-labelledby="h-comp">
+  <section class="sec" id="preguntas" aria-labelledby="h-faq">
     <div class="wrap narrow">
-      <div class="reveal"><p class="eyebrow">Comparación</p><h2 id="h-comp">Corvo frente a otras opciones.</h2></div>
-      <div class="table-wrap reveal" role="region" aria-label="Corvo frente a Alegra POS Pyme y Siigo POS Avanzado" tabindex="0">
-        <table>
+      <h2 id="h-faq">Preguntas</h2>
+      <div class="faq">
+        <details><summary>¿Necesito internet para usar Corvo?</summary><p>No para el día a día: la caja, el inventario y los reportes funcionan en tu red local. Solo se necesita internet para instalar.</p></details>
+        <details><summary>¿Dónde se guardan mis datos?</summary><p>En el computador de tu negocio. Puedes hacer copias de respaldo y guardarlas donde prefieras.</p></details>
+        <details><summary>¿Qué pasa si se va la luz o la red?</summary><p>Al volver la energía, Corvo retoma con tus datos.</p></details>
+        <details><summary>¿Cómo se instala?</summary>
+          <ol>
+            <li>Pide tu instalación y paga por transferencia con QR. Cuando confirmemos el pago, te enviamos por correo un enlace de un solo uso para descargar el instalador.</li>
+            <li>Crea tu negocio y elige tu plan. Ahí empiezan tus 7 días gratis.</li>
+            <li>Con el celular en el mismo Wi-Fi, abre la dirección que muestra Corvo y agrégala a tu pantalla de inicio.</li>
+          </ol></details>
+        <details><summary>¿Cómo funciona la prueba gratis?</summary><p>Los 7 días gratis empiezan dentro de la app, cuando eliges tu plan, una sola vez por negocio y sin tarjeta. Si decides continuar, pagas el plan por QR. Te avisamos por correo un día antes de que termine.</p></details>
+        <details><summary>¿Cuánto cuesta?</summary><p>$149.900 al mes o $1.499.000 al año (pagas 10 meses y usas 12), con 3 PCs, soporte por WhatsApp y actualizaciones. La instalación asistida se paga una sola vez, aparte del plan.</p></details>
+        <details><summary>¿Hay garantía de devolución?</summary><p>Sí. <span data-reembolso>Reembolso dentro de los 7 días siguientes al pago, en ambos planes.</span> Si no te sirve, escríbenos por WhatsApp y te devolvemos tu dinero.</p></details>
+        <details><summary>¿Puedo traer los datos de mi sistema actual?</summary><p>Sí. Puedes importar inventario, clientes y proveedores desde archivos de Excel o CSV, por ejemplo los exportados desde Aronium.</p></details>
+        <details><summary>¿Emite factura electrónica de la DIAN?</summary><p>No. Corvo es para control interno y contable, sin facturación electrónica. Está pensado para negocios que ya facturan con otro sistema y quieren llevar caja, inventario y compras en un solo lugar.</p></details>
+        <details><summary>¿Cómo se compara con otras opciones?</summary>
+          <div class="table-wrap" role="region" aria-label="Corvo frente a Alegra POS Pyme y Siigo POS Avanzado" tabindex="0">
+            <table>
           <caption class="sr">Funcionalidades: Corvo, Alegra POS Pyme y Siigo POS Avanzado</caption>
           <thead><tr><th scope="col">Funcionalidad</th><th scope="col" class="me">Corvo</th><th scope="col">Alegra POS Pyme</th><th scope="col">Siigo POS Avanzado</th></tr></thead>
           <tbody>
@@ -172,77 +147,8 @@
             <tr><th scope="row">Variantes, promociones y cuentas por pagar</th><td class="me">Próximamente (en construcción)</td><td>—</td><td>—</td></tr>
           </tbody>
         </table>
-      </div>
-      <p class="note">Datos de las páginas oficiales de Alegra y Siigo, consultadas en octubre de 2026. «—» indica que su página oficial no lo publica. Corvo no emite factura electrónica DIAN.</p>
-
-      <div class="reveal sav"><h3>Cuánto cuesta en 3 años</h3>
-        <p class="small">Corvo anual: $2.997.000 en 3 años (mensual: $3.596.400), con el precio de lanzamiento congelado.</p></div>
-      <div class="table-wrap reveal" role="region" aria-label="Costo a 3 años" tabindex="0">
-        <table>
-          <caption class="sr">Costo a 3 años pagando por año y diferencia con Corvo anual</caption>
-          <thead><tr><th scope="col">Alternativa</th><th scope="col">Costo a 3 años</th><th scope="col" class="me">Diferencia con Corvo anual</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Siigo POS Avanzado + Emprendedor (compras y costeo)</th><td>$7.916.580</td><td class="me">Ahorras $4.919.580</td></tr>
-            <tr><th scope="row">Alegra POS Pro</th><td>$3.777.300</td><td class="me">Ahorras $780.300</td></tr>
-            <tr><th scope="row">Alegra POS Pyme</th><td>$2.157.300</td><td class="me">Corvo cuesta $839.700 más</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="note">Precios de referencia de las páginas oficiales de Alegra y Siigo, octubre de 2026, pagando por año; pueden cambiar. Hay opciones más económicas con menos funciones o con límites.</p>
-
-      <div class="reveal" style="margin-top:56px"><p class="eyebrow">Por tipo de sistema</p></div>
-      <div class="table-wrap reveal" role="region" aria-labelledby="h-comp" tabindex="0">
-        <table>
-          <caption class="sr">Comparación general por tipo de sistema</caption>
-          <thead><tr><th scope="col">Qué necesitas</th><th scope="col" class="me">Corvo</th><th scope="col">Sistemas en la nube</th><th scope="col">Programas de escritorio clásicos</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Vender sin internet</th><td class="me">Sí</td><td>No</td><td>Sí</td></tr>
-            <tr><th scope="row">Datos guardados en tu equipo</th><td class="me">Sí</td><td>No</td><td>Sí</td></tr>
-            <tr><th scope="row">Usar el celular en el negocio</th><td class="me">Sí, por Wi-Fi local</td><td>Sí</td><td>Rara vez</td></tr>
-            <tr><th scope="row">Pensado para cajeros sin experiencia</th><td class="me">Sí</td><td>Depende</td><td>Depende</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="note">Comparación general por tipo de sistema; puede variar según el producto.</p>
-    </div>
-  </section>
-
-  <!-- INSTALAR -->
-  <section class="sec alt" id="instalar" data-bg="#15130f" aria-labelledby="h-inst">
-    <div class="wrap">
-      <div class="reveal"><p class="eyebrow">Instalar</p><h2 id="h-inst">Listo en tres pasos.</h2></div>
-      <ol class="steps">
-        <li class="reveal"><span class="n" aria-hidden="true">1</span><div><h3>Pide tu instalación y descarga</h3><p>Haz tu pedido, paga por transferencia con QR y, cuando confirmemos el pago, te enviamos por correo un enlace de un solo uso para descargar el instalador y ponerlo en el computador que será el servidor.</p></div></li>
-        <li class="reveal"><span class="n" aria-hidden="true">2</span><div><h3>Crea tu negocio y elige tu plan</h3><p>La primera vez registra los datos del negocio y el usuario administrador. Al elegir tu plan empiezan tus 7 días gratis.</p></div></li>
-        <li class="reveal"><span class="n" aria-hidden="true">3</span><div><h3>Conecta el celular</h3><p>Con el celular en el mismo Wi-Fi, abre la dirección que muestra Corvo y agrégala a tu pantalla de inicio.</p></div></li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- PRUEBA GRATIS -->
-  <section class="sec dl" id="descargar" data-bg="#1a160d" aria-labelledby="h-dl">
-    <div class="wrap dl-wrap reveal center">
-      <svg class="logo-lg" aria-hidden="true"><use href="#cuervo"/></svg>
-      <h2 id="h-dl">Pide tu instalación</h2>
-      <p class="lead">Haz tu pedido y paga por transferencia con QR. Cuando confirmemos el pago te enviamos por correo el enlace para descargar el instalador. Tus 7 días gratis empiezan dentro de la app, al elegir tu plan, una sola vez por negocio.</p>
-      <a class="btn dl-btn" href="comprar.html">Pedir mi instalación</a>
-      <p class="small">Hoy Corvo funciona en computadores con Windows. Android: próximamente.</p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="sec" id="preguntas" data-bg="#0d0d0d" aria-labelledby="h-faq">
-    <div class="wrap narrow">
-      <div class="reveal"><p class="eyebrow">Preguntas frecuentes</p><h2 id="h-faq">Lo que suelen preguntar.</h2></div>
-      <div class="faq reveal">
-        <details><summary>¿Necesito internet para usar Corvo?</summary><p>No para el día a día: la caja, el inventario y los reportes funcionan en tu red local. Solo se necesita internet para instalar.</p></details>
-        <details><summary>¿Dónde se guardan mis datos?</summary><p>En el computador de tu negocio. Puedes hacer copias de respaldo y guardarlas donde prefieras.</p></details>
-        <details><summary>¿Qué pasa si se va la luz o la red?</summary><p>Al volver la energía, Corvo retoma con tus datos.</p></details>
-        <details><summary>¿Emite factura electrónica de la DIAN?</summary><p>Esta primera versión es para control interno y contable, sin facturación electrónica. La facturación con proveedor está prevista para una segunda etapa.</p></details>
-        <details><summary>¿Puedo traer los datos de mi sistema actual?</summary><p>Sí. Puedes importar inventario, clientes y proveedores desde archivos de Excel o CSV, por ejemplo los exportados desde Aronium. La instalación con migración desde Aronium cuesta $249.000 hasta el 30 de oct. de 2026 y $449.000 desde el 31 de oct. de 2026 (pago único, aparte del plan).</p></details>
-        <details><summary>¿Cómo funciona la prueba gratis?</summary><p>Primero pides y pagas la instalación (transferencia con QR) y descargas el instalador con el enlace que te llega por correo. Los 7 días gratis empiezan dentro de la app, cuando eliges tu plan, una sola vez por negocio y sin tarjeta. Si decides continuar, pagas el plan por QR. Te avisamos por correo un día antes de que termine.</p></details>
-        <details><summary>¿Hay garantía de devolución?</summary><p>Sí, en el plan anual: 7 días desde el pago. Si no te sirve, escríbenos por WhatsApp y te devolvemos tu dinero.</p></details>
-        <details><summary>¿Cuánto cuesta?</summary><p>Oferta de lanzamiento hasta el 30 de oct. de 2026: $99.900 al mes o $999.000 al año (2 meses gratis), 3 PCs incluidas, instalación asistida desde $149.000 (pago único, aparte) y soporte por WhatsApp. Desde el 31 de oct. de 2026 el precio regular es $149.900 al mes o $1.499.000 al año. Los planes incluyen prueba gratis de 7 días dentro de la app y, en el plan anual, garantía de devolución de 7 días. Consulta la sección Precios.</p></details>
+          </div>
+          <p class="note" style="padding:0 4px 22px;margin:0">Datos de las páginas oficiales de Alegra y Siigo, consultadas en octubre de 2026. «—» indica que su página oficial no lo publica. Corvo no emite factura electrónica DIAN.</p></details>
       </div>
     </div>
   </section>
@@ -252,8 +158,7 @@
   <div class="wrap foot-in"><a class="brand" href="#inicio"><svg class="logo" aria-hidden="true"><use href="#cuervo"/></svg><span>Corvo</span></a><p>Corvo no incluye facturación electrónica DIAN.</p><p class="contacto">Contacto: <a href="mailto:founder@solvacq.com">founder@solvacq.com</a> · <a href="https://wa.me/573126465778" target="_blank" rel="noopener">WhatsApp</a></p></div>
 </footer>
 
-
-<script src="vendor/lenis.min.js"></script>
+<script src="pedidos.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

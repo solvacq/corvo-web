@@ -18,8 +18,8 @@ body.pg { min-height: 100vh; }
 .chk { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 14px; }
 .chk input { margin-top: 4px; accent-color: var(--accent); }
 .aviso { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); font-size: 14px; }
-.aviso.err { border: 1px solid #7a3b2b; color: #f0a58a; }
-.monto { font-variant-numeric: tabular-nums; font-family: var(--f-display); font-size: 2.5rem; line-height: 1; margin-top: 6px; }
+.aviso.err { border: 1px solid #e3b4a8; color: #9b2c1b; }
+.monto { font-variant-numeric: lining-nums tabular-nums; font-family: var(--f-body); font-weight: 600; letter-spacing: -.02em; font-size: 2.5rem; line-height: 1; margin-top: 6px; }
 .estado { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 13px; background: var(--surface-2); color: var(--muted); }
 .estado.ok { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-line); }
 .qr { background: #fff; border-radius: 14px; padding: 10px; width: 220px; margin: 16px auto 0; }
@@ -27,3 +27,21 @@ body.pg { min-height: 100vh; }
 .pre { white-space: pre-line; margin-top: 12px; font-size: 14px; }
 .btn[disabled], .btn.off { opacity: .45; cursor: not-allowed; pointer-events: none; }
 .pg-main .btn { width: 100%; margin-top: 18px; }
+
+/* Tarjetas de «Pedir instalación» */
+.ops { display: grid; gap: 10px; }
+.op { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); cursor: pointer; }
+.op input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.op:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
+.op:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.op-t { font-weight: 600; }
+.op-d { grid-column: 1; font-size: 14px; color: var(--muted); }
+.op-p { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-weight: 600; font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+/* Línea de tiempos del pedido */
+.tiempos { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 16px 0 0; padding: 0; counter-reset: t; }
+.tiempos li { counter-increment: t; font-size: 13px; color: var(--muted); padding: 10px 10px 10px 34px; position: relative; border: 1px solid var(--line); border-radius: 12px; line-height: 1.3; }
+.tiempos li::before { content: counter(t); position: absolute; left: 10px; top: 10px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; font-size: 11px; font-weight: 600; }
+.tiempos li.on { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); }
+.tiempos li.on::before { background: var(--accent); color: #fff; }
+@media (max-width: 480px) { .tiempos { grid-template-columns: minmax(0, 1fr); } }
+#comp { padding: 10px 0; min-height: 0; border: 0; background: none; font-size: 14px; }

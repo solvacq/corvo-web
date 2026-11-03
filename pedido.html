@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="dark" />
-<meta name="theme-color" content="#0d0d0d" />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#ffffff" />
 <meta name="robots" content="noindex" />
 <title>Tu pedido | Corvo</title>
 <meta name="description" content="Estado de tu pedido de instalación de Corvo." />
@@ -25,15 +25,29 @@
     <p style="margin-top:10px"><span class="estado" id="est"></span></p>
     <p class="lead" id="nota"></p>
   </div>
+  <ol class="tiempos" id="tiempos" aria-label="Cómo sigue tu pedido"><li data-p="pagas">Pagas</li><li data-p="verificamos">Verificamos</li><li data-p="enlace">Te llega el enlace de descarga</li></ol>
   <div class="tarjeta" id="pago">
     <h2 style="font-size:1.1rem">Cómo pagar</h2>
     <p class="pre" id="instr"></p>
     <div class="qr" id="qr" hidden><img alt="QR de pago" /></div>
     <p class="lead" style="font-size:13px;margin-top:12px">Paga el valor exacto y escribe la referencia. Confirmamos cada transferencia a mano; no hay cobro automático.</p>
+    <p class="lead" data-reembolso style="font-size:13px;margin-top:6px">Reembolso dentro de los 7 días siguientes al pago, en ambos planes.</p>
+    <button class="btn" id="yapague" type="button">Ya pagué</button>
+    <div id="reporte" hidden>
+      <h3 style="font-size:1rem;margin:18px 0 4px">Avísanos de tu pago</h3>
+      <p class="lead" style="font-size:14px;margin-top:0">Puedes adjuntar el comprobante (opcional; imagen o PDF, hasta 5 MB).</p>
+      <label class="campo">Comprobante (opcional)<input type="file" id="comp" accept="image/png,image/jpeg,application/pdf" /></label>
+      <p id="rerr" class="aviso err" role="alert" hidden></p>
+      <button class="btn" id="enviarpago" type="button">Reportar mi pago</button>
+      <p class="lead" style="font-size:14px;margin-top:14px">¿Prefieres WhatsApp? <a id="wa" href="#" target="_blank" rel="noopener">Abrir WhatsApp con el mensaje listo</a></p>
+    </div>
   </div>
+  <div class="tarjeta" id="repo" hidden><p style="margin:0"><strong>Pago reportado, lo estamos verificando.</strong></p><p class="lead" style="font-size:14px;margin-top:6px">Cuando lo confirmemos te enviamos por correo el enlace de descarga. Esta página se actualiza sola.</p></div>
   <div class="tarjeta">
     <h2 style="font-size:1.1rem">Descarga</h2>
     <p class="lead" id="desc"></p>
+    <button class="btn btn-ghost" id="nuevoenlace" type="button" hidden>Pedir otro enlace de descarga</button>
+    <p id="nerr" class="aviso" role="status" hidden></p>
   </div>
   <button class="btn btn-ghost" id="ref2" type="button">Actualizar estado</button>
 </section>
@@ -44,24 +58,52 @@
   const t = new URLSearchParams(location.hash.slice(1)).get('t')
   const $ = (id) => document.getElementById(id), msg = $('msg')
   if (!t) { msg.textContent = 'Falta el enlace de tu pedido. Usa el enlace que te enviamos al correo.'; msg.classList.add('err'); return }
-  const textos = { pendiente_pago: 'Esperando tu pago', pagado: 'Pago confirmado', completado: 'Completado' }
+  const textos = { pendiente_pago: 'Esperando tu pago', pago_reportado: 'Pago reportado, lo estamos verificando', pagado: 'Pago confirmado', completado: 'Completado' }
   const desc = { bloqueada: 'Se habilita cuando confirmemos tu pago.', enviada: 'Revisa tu correo: ahí está tu enlace de descarga (sirve una sola vez). Si no te llega, escríbenos a founder@solvacq.com o por WhatsApp.', completada: 'Descarga completada.', vencida: 'Tu enlace venció; escríbenos y te enviamos otro.' }
+  const errores = { comprobante_tipo: 'El comprobante debe ser PNG, JPG o PDF.', comprobante_grande: 'El comprobante pesa más de 5 MB.', ya_reportado: 'Ya reportaste este pago; lo estamos verificando.', pedido_no_pendiente: 'Este pedido ya no está esperando pago.', demasiadas_solicitudes: 'Hiciste varias solicitudes seguidas. Inténtalo más tarde o escríbenos por WhatsApp.', sin_pago: 'Todavía no hemos confirmado tu pago.' }
+  let ref = ''
   async function cargar() {
     try {
-      const p = await api('/v1/pedidos/' + encodeURIComponent(t))
-      msg.hidden = true; $('det').hidden = false
+      const p = await api('/v1/pedidos/' + encodeURIComponent(t), { cache: 'no-store' })
+      msg.hidden = true; $('det').hidden = false; ref = p.referencia
       $('ref').textContent = p.referencia; $('tipo').textContent = p.tipo_nombre; $('monto').textContent = cop(p.monto)
-      const e = $('est'); e.textContent = textos[p.estado] || p.estado; e.classList.toggle('ok', p.estado !== 'pendiente_pago')
+      const rep = p.estado === 'pago_reportado' || (p.estado === 'pendiente_pago' && p.pago_reportado === true)
+      const e = $('est'); e.textContent = rep ? textos.pago_reportado : (textos[p.estado] || p.estado); e.classList.toggle('ok', p.estado !== 'pendiente_pago' || rep)
       $('nota').textContent = p.nombre ? 'Hola, ' + p.nombre + '.' : ''
       $('instr').textContent = p.instrucciones_pago || ''
-      $('pago').hidden = p.estado !== 'pendiente_pago'
+      const pendiente = p.estado === 'pendiente_pago' && !rep
+      $('pago').hidden = !pendiente; $('repo').hidden = !rep
+      document.querySelectorAll('#tiempos li').forEach((li) => li.classList.toggle('on', ({ pagas: pendiente, verificamos: rep, enlace: p.estado === 'pagado' || p.estado === 'completado' })[li.dataset.p]))
       if (p.qr_disponible && !$('qr').dataset.cargado) { const im = $('qr').querySelector('img'); im.onload = () => { $('qr').hidden = false }; im.src = CORVO_API + (p.qr_url || '/v1/pedidos/' + encodeURIComponent(t) + '/qr'); $('qr').dataset.cargado = '1' }
+      $('wa').href = 'https://wa.me/573126465778?text=' + encodeURIComponent('Hola, ya pagué mi pedido ' + p.referencia + ' (' + cop(p.monto) + '). Adjunto el comprobante.')
       $('desc').textContent = desc[p.descarga] || ''
+      $('nuevoenlace').hidden = !(p.estado === 'pagado' || p.estado === 'completado')
     } catch (x) {
       msg.hidden = false; msg.classList.add('err'); $('det').hidden = x.status === 404 ? true : $('det').hidden
       msg.textContent = x.status === 404 ? 'No encontramos ese pedido. Revisa el enlace del correo.' : 'No pudimos consultar tu pedido. Inténtalo de nuevo en un momento.'
     }
   }
+  $('yapague').addEventListener('click', () => { $('reporte').hidden = false; $('yapague').hidden = true })
+  $('enviarpago').addEventListener('click', async () => {
+    const er = $('rerr'), b = $('enviarpago'), f = $('comp').files[0]
+    er.hidden = true
+    if (f && !/^(image\/(png|jpeg)|application\/pdf)$/.test(f.type)) { er.textContent = errores.comprobante_tipo; er.hidden = false; return }
+    if (f && f.size > 5 * 1024 * 1024) { er.textContent = errores.comprobante_grande; er.hidden = false; return }
+    b.disabled = true; b.textContent = 'Enviando…'
+    try {
+      const fd = new FormData(); if (f) fd.append('comprobante', f)
+      await api('/v1/pedidos/' + encodeURIComponent(t) + '/pago-reportado', { method: 'POST', body: fd })
+      await cargar()
+    } catch (x) {
+      er.textContent = errores[x.codigo] || 'No pudimos registrar tu aviso. Escríbenos por WhatsApp con tu referencia y lo revisamos.'; er.hidden = false
+    } finally { b.disabled = false; b.textContent = 'Reportar mi pago' }
+  })
+  $('nuevoenlace').addEventListener('click', async () => {
+    const b = $('nuevoenlace'), n = $('nerr'); b.disabled = true; n.hidden = true
+    try { await api('/v1/pedidos/' + encodeURIComponent(t) + '/enlace-nuevo', { method: 'POST' }); n.textContent = 'Listo: te enviamos otro enlace por correo. El anterior ya no sirve.'; n.classList.remove('err') }
+    catch (x) { n.textContent = errores[x.codigo] || 'No pudimos enviar otro enlace ahora. Escríbenos por WhatsApp.'; n.classList.add('err') }
+    n.hidden = false; b.disabled = false
+  })
   $('ref2').addEventListener('click', cargar)
   await cargar(); setInterval(cargar, 30000)
 })()

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="dark" />
-<meta name="theme-color" content="#0d0d0d" />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#ffffff" />
 <meta name="robots" content="noindex" />
 <title>Pedir instalación | Corvo</title>
 <meta name="description" content="Pide la instalación asistida de Corvo y paga por QR." />
@@ -20,13 +20,14 @@
 <p class="lead">Elige qué necesitas, déjanos tus datos y te mostramos el valor exacto y cómo pagar por QR. El instalador se habilita cuando confirmemos tu pago.</p>
 <p id="estado" class="aviso" role="status">Cargando precios…</p>
 <form id="f" hidden novalidate>
-  <fieldset class="opciones" id="items" style="border:0;padding:0;margin:20px 0 0"><legend class="sr">Qué necesitas</legend></fieldset>
+  <fieldset class="ops" id="items" style="border:0;padding:0;margin:20px 0 0"><legend class="sr">Qué necesitas</legend></fieldset>
   <label class="campo">Nombre<input type="text" name="nombre" autocomplete="name" required maxlength="80" /></label>
   <label class="campo">Correo<input type="email" name="correo" autocomplete="email" required inputmode="email" /></label>
   <label class="campo">WhatsApp<input type="tel" name="whatsapp" autocomplete="tel-national" required inputmode="tel" placeholder="3001234567" /></label>
   <label class="chk"><input type="checkbox" name="terminos" required /><span>He leído y acepto las <a href="condiciones.html" target="_blank" rel="noopener">condiciones del servicio de instalación</a>.</span></label>
   <p id="error" class="aviso err" role="alert" hidden></p>
   <button class="btn" id="enviar" type="submit">Crear mi pedido</button>
+  <p class="small" data-reembolso style="margin-top:10px;text-align:center">Reembolso dentro de los 7 días siguientes al pago, en ambos planes.</p>
 </form>
 </main>
 <script src="pedidos.js"></script>
@@ -34,13 +35,15 @@
 (async () => {
   const f = document.getElementById('f'), est = document.getElementById('estado'), items = document.getElementById('items'), err = document.getElementById('error'), btn = document.getElementById('enviar')
   let cat
-  try { cat = await api('/v1/pedidos/catalogo') } catch { est.textContent = 'No pudimos cargar los precios ahora. Inténtalo en unos minutos o escríbenos por WhatsApp.'; est.classList.add('err'); return }
+  try { cat = await api('/v1/pedidos/catalogo', { cache: 'no-store' }) } catch { est.textContent = 'No pudimos cargar los precios ahora. Inténtalo en unos minutos o escríbenos por WhatsApp.'; est.classList.add('err'); return }
   const disp = cat.items.filter((it) => it.disponible !== false)
   if (cat.disponible === false || !disp.length) { est.textContent = 'Próximamente. Todavía no estamos recibiendo pedidos de instalación; escríbenos por WhatsApp y te avisamos.'; return }
-  est.textContent = cat.vigente === 'lanzamiento' ? 'Precios de lanzamiento hasta el ' + fechaLarga(cat.lanzamiento_hasta + 'T12:00:00') + '. El plan incluye ' + cat.pcs_incluidas + ' PCs.' : 'El plan incluye ' + cat.pcs_incluidas + ' PCs.'
-  disp.forEach((it, i) => {
-    const r = el('input', { type: 'radio', name: 'tipo', value: it.tipo, checked: i === 0 })
-    items.append(el('label', { className: 'opcion' }, el('span', {}, r, ' ', it.nombre), el('span', { className: 'pr' }, cop(it.precio))))
+  est.textContent = (cat.vigente === 'lanzamiento' && cat.lanzamiento_hasta && new Date(cat.lanzamiento_hasta + 'T23:59:59') > new Date()) ? 'Precios de lanzamiento hasta el ' + fechaLarga(cat.lanzamiento_hasta + 'T12:00:00') + '. El plan incluye ' + cat.pcs_incluidas + ' PCs.' : 'El plan incluye ' + cat.pcs_incluidas + ' PCs.'
+  const resumen = { estandar: 'Instalación asistida: 1 PC y celular, para un negocio nuevo.', migracion_aronium: 'Te traemos tu inventario y clientes desde Aronium.', pc_adicional: 'Suma otra PC a tu instalación.' }
+  const pref = disp.some((it) => it.tipo === 'estandar') ? 'estandar' : disp[0].tipo
+  disp.forEach((it) => {
+    const r = el('input', { type: 'radio', name: 'tipo', value: it.tipo, checked: it.tipo === pref })
+    items.append(el('label', { className: 'op' }, r, el('span', { className: 'op-t' }, it.nombre), el('span', { className: 'op-d' }, resumen[it.tipo] || ''), el('span', { className: 'op-p' }, cop(it.precio))))
   })
   f.hidden = false
   f.addEventListener('submit', async (e) => {
