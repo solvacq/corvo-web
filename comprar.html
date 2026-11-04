@@ -14,10 +14,11 @@
 <link rel="stylesheet" href="pedidos.css" />
 </head>
 <body class="pg">
-<header class="pg-top"><div class="wrap"><a class="brand" href="index.html" aria-label="Corvo, inicio"><span>Corvo</span></a><a class="btn btn-sm btn-ghost" href="index.html">Volver al sitio</a></div></header>
+<header class="pg-top"><div class="wrap"><span class="brand"><span>Corvo</span></span></div></header>
 <main class="pg-main" id="app">
+<ol class="tiempos" aria-label="Cómo funciona"><li class="on">Pagas</li><li>Verificamos</li><li>Te llega el enlace</li></ol>
 <h1>Compra Corvo</h1>
-<p class="lead">Pago único, todo incluido: instalación, migración de tus datos y las PCs adicionales que necesites. Déjanos tus datos y te mostramos cómo pagar por QR. El instalador se habilita cuando confirmemos tu pago.</p>
+<p class="lead">Pago único, todo incluido. Déjanos tus datos y en el siguiente paso te mostramos el QR para pagar.</p>
 <p id="estado" class="aviso" role="status">Cargando el precio…</p>
 <form id="f" hidden novalidate>
   <div class="ops" id="items" style="margin:20px 0 0"></div>
@@ -26,8 +27,8 @@
   <label class="campo">WhatsApp<input type="tel" name="whatsapp" autocomplete="tel-national" required inputmode="tel" placeholder="3001234567" /></label>
   <label class="chk"><input type="checkbox" name="terminos" required /><span>He leído y acepto las <a href="condiciones.html" target="_blank" rel="noopener">condiciones del servicio</a>.</span></label>
   <p id="error" class="aviso err" role="alert" hidden></p>
-  <button class="btn" id="enviar" type="submit">Comprar</button>
-  <p class="small" data-reembolso style="margin-top:10px;text-align:center">Reembolso dentro de los 7 días siguientes al pago.</p>
+  <button class="btn" id="enviar" type="submit">Continuar al pago</button>
+  <p class="small" data-reembolso style="margin-top:10px;text-align:center">Reembolso dentro de los 7 días siguientes al pago. <a href="https://wa.me/573126465778" target="_blank" rel="noopener">¿Dudas? WhatsApp</a></p>
 </form>
 </main>
 <script src="pedidos.js"></script>
@@ -46,7 +47,7 @@
   f.addEventListener('submit', async (e) => {
     e.preventDefault(); err.hidden = true
     const d = new FormData(f)
-    btn.disabled = true; btn.textContent = 'Creando…'
+    btn.disabled = true; btn.textContent = 'Un momento…'
     try {
       const r = await api('/v1/pedidos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: d.get('tipo'), nombre: d.get('nombre'), correo: d.get('correo'), whatsapp: d.get('whatsapp'), acepta_terminos: d.get('terminos') === 'on' }) })
       location.href = 'pedido.html#t=' + encodeURIComponent(r.token)
@@ -54,7 +55,7 @@
       if (x.status === 409 && x.codigo === 'no_disponible') { f.hidden = true; est.textContent = 'Próximamente. Todavía no estamos recibiendo pedidos; escríbenos por WhatsApp y te avisamos.'; return }
       const m = { tipo: 'Elige qué necesitas.', nombre: 'Escribe tu nombre.', correo: 'Revisa tu correo.', whatsapp: 'Escribe un WhatsApp colombiano de 10 dígitos que empiece por 3.', terminos: 'Debes aceptar las condiciones.', demasiados_pedidos: 'Hiciste varios pedidos seguidos. Intenta más tarde o escríbenos por WhatsApp.' }
       err.textContent = m[x.codigo] || 'No pudimos crear el pedido. Inténtalo de nuevo.'; err.hidden = false
-      btn.disabled = false; btn.textContent = 'Comprar'
+      btn.disabled = false; btn.textContent = 'Continuar al pago'
     }
   })
 })()

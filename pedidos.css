@@ -45,3 +45,24 @@ body.pg { min-height: 100vh; }
 .tiempos li.on::before { background: var(--accent); color: #fff; }
 @media (max-width: 480px) { .tiempos { grid-template-columns: minmax(0, 1fr); } }
 #comp { padding: 10px 0; min-height: 0; border: 0; background: none; font-size: 14px; }
+
+/* Pedido y compra simples: un solo foco */
+.pg-main { padding-top: 24px; }
+.tiempos li.done { color: var(--ink); }
+.tiempos li.done::before { background: var(--accent-soft); color: var(--accent); content: "✓"; }
+.tiempos { margin-bottom: 8px; }
+@media (max-width: 480px) { .tiempos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; } .tiempos li { padding: 34px 6px 8px; text-align: center; font-size: 12px; } .tiempos li::before { left: 50%; top: 8px; transform: translateX(-50%); } }
+.tarjeta.foco { text-align: center; }
+.tarjeta.foco .monto { font-size: clamp(2.5rem, 12vw, 3.25rem); }
+.ref-l { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.qr.qr-g { width: min(100%, 320px); padding: 14px; margin-top: 18px; border: 1px solid var(--line); }
+.escanea { font-weight: 600; margin-top: 12px; }
+.pg-main .btn.btn-sm { width: auto; margin-top: 10px; }
+.pasos { text-align: left; margin: 18px 0 0; padding-left: 22px; font-size: 15px; color: var(--ink); }
+.pasos li { margin-top: 6px; }
+.comp { margin-top: 12px; text-align: left; font-size: 14px; color: var(--muted); }
+.comp summary { cursor: pointer; text-align: center; }
+.gracias { font-family: var(--f-display); font-weight: var(--d-weight); font-size: 1.6rem; line-height: 1.2; }
+.calma { text-align: center; font-size: 13px; color: var(--muted); margin-top: 14px; }
+.linkbtn { background: none; border: 0; padding: 4px; font: inherit; color: var(--muted); text-decoration: underline; cursor: pointer; }
+#monto::after { content: " COP"; font-size: .38em; font-weight: 500; color: var(--muted); letter-spacing: 0; }
