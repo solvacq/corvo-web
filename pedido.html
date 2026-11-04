@@ -34,7 +34,18 @@
     <p id="rerr" class="aviso err" role="alert" hidden></p>
     <button class="btn" id="yapague" type="button">Ya pagué</button>
     <details class="comp"><summary>Adjuntar comprobante (opcional)</summary>
-      <label class="campo">Imagen o PDF, hasta 5 MB<input type="file" id="comp" accept="image/png,image/jpeg,application/pdf" /></label>
+      <label class="zona" id="zona" for="comp">
+        <svg class="zona-i" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+        <span class="zona-t">Toca para elegir tu comprobante</span>
+        <span class="zona-d">Imagen o PDF, hasta 5 MB</span>
+        <input type="file" id="comp" accept="image/png,image/jpeg,application/pdf" />
+      </label>
+      <div class="elegido" id="elegido" hidden>
+        <img id="mini" alt="" hidden /><span class="pdf-i" id="pdfi" hidden>PDF</span>
+        <span class="el-info"><strong id="elnom"></strong><span id="eltam"></span></span>
+        <button class="btn btn-ghost btn-sm" id="quitar" type="button">Quitar</button>
+      </div>
+      <p id="cerr" class="aviso err" role="alert" hidden></p>
     </details>
   </div>
 
@@ -68,7 +79,7 @@
   const $ = (id) => document.getElementById(id), msg = $('msg')
   if (!t) { msg.textContent = 'Falta el enlace de tu pedido. Usa el enlace que te enviamos al correo.'; msg.classList.add('err'); return }
   const desc = { bloqueada: 'Se habilita cuando confirmemos tu pago.', enviada: 'Revisa tu correo: ahí está tu enlace de descarga (sirve una sola vez). Si no te llega, escríbenos a founder@solvacq.com o por WhatsApp.', completada: 'Descarga completada.', vencida: 'Tu enlace venció; escríbenos y te enviamos otro.' }
-  const errores = { comprobante_tipo: 'El comprobante debe ser PNG, JPG o PDF.', comprobante_grande: 'El comprobante pesa más de 5 MB.', ya_reportado: 'Ya reportaste este pago; lo estamos verificando.', pedido_no_pendiente: 'Este pedido ya no está esperando pago.', demasiadas_solicitudes: 'Hiciste varias solicitudes seguidas. Inténtalo más tarde o escríbenos por WhatsApp.', sin_pago: 'Todavía no hemos confirmado tu pago.' }
+  const errores = { comprobante_tipo: 'Ese archivo no es una foto ni un PDF. Elige una imagen (PNG o JPG) o un PDF.', comprobante_grande: 'Ese archivo es muy pesado (máximo 5 MB). Prueba con una captura de pantalla o una foto más liviana.', ya_reportado: 'Ya reportaste este pago; lo estamos verificando.', pedido_no_pendiente: 'Este pedido ya no está esperando pago.', demasiadas_solicitudes: 'Hiciste varias solicitudes seguidas. Inténtalo más tarde o escríbenos por WhatsApp.', sin_pago: 'Todavía no hemos confirmado tu pago.' }
   let ref = '', qrUrl = ''
   async function cargar() {
     try {
@@ -91,6 +102,22 @@
       msg.textContent = x.status === 404 ? 'No encontramos ese pedido. Revisa el enlace del correo.' : 'No pudimos consultar tu pedido. Inténtalo de nuevo en un momento.'
     }
   }
+  const inp = $('comp'), zona = $('zona'), eleg = $('elegido'), cerr = $('cerr'); let urlMini = ''
+  const tam = (n) => n < 1048576 ? Math.max(1, Math.round(n / 1024)) + ' KB' : (n / 1048576).toFixed(1).replace('.', ',') + ' MB'
+  function quitar() { inp.value = ''; if (urlMini) { URL.revokeObjectURL(urlMini); urlMini = '' } eleg.hidden = true; zona.hidden = false; $('mini').hidden = true; $('pdfi').hidden = true }
+  function elegir() {
+    cerr.hidden = true; const f = inp.files[0]; if (!f) { quitar(); return }
+    if (!/^(image\/(png|jpeg)|application\/pdf)$/.test(f.type)) { quitar(); cerr.textContent = errores.comprobante_tipo; cerr.hidden = false; return }
+    if (f.size > 5 * 1024 * 1024) { quitar(); cerr.textContent = errores.comprobante_grande; cerr.hidden = false; return }
+    $('elnom').textContent = f.name; $('eltam').textContent = tam(f.size)
+    if (f.type === 'application/pdf') { $('mini').hidden = true; $('pdfi').hidden = false } else { urlMini = URL.createObjectURL(f); $('mini').src = urlMini; $('mini').hidden = false; $('pdfi').hidden = true }
+    eleg.hidden = false; zona.hidden = true
+  }
+  inp.addEventListener('change', elegir)
+  $('quitar').addEventListener('click', () => { quitar(); cerr.hidden = true })
+  ;['dragenter', 'dragover'].forEach((ev) => zona.addEventListener(ev, (e) => { e.preventDefault(); zona.classList.add('arrastra') }))
+  ;['dragleave', 'drop'].forEach((ev) => zona.addEventListener(ev, (e) => { e.preventDefault(); zona.classList.remove('arrastra') }))
+  zona.addEventListener('drop', (e) => { const f = e.dataTransfer && e.dataTransfer.files[0]; if (!f) return; const dt = new DataTransfer(); dt.items.add(f); inp.files = dt.files; elegir() })
   $('guardarqr').addEventListener('click', async () => {
     try { const r = await fetch(qrUrl), b = await r.blob(), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'corvo-qr-' + ref + '.png'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000) }
     catch { window.open(qrUrl, '_blank', 'noopener') }
@@ -100,14 +127,14 @@
     er.hidden = true
     if (f && !/^(image\/(png|jpeg)|application\/pdf)$/.test(f.type)) { er.textContent = errores.comprobante_tipo; er.hidden = false; return }
     if (f && f.size > 5 * 1024 * 1024) { er.textContent = errores.comprobante_grande; er.hidden = false; return }
-    b.disabled = true; b.textContent = 'Enviando…'
+    b.disabled = true; b.textContent = 'Enviando…'; $('zona').classList.add('off')
     try {
       const fd = new FormData(); if (f) fd.append('comprobante', f)
       await api('/v1/pedidos/' + encodeURIComponent(t) + '/pago-reportado', { method: 'POST', body: fd })
       await cargar(); window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (x) {
       er.textContent = errores[x.codigo] || 'No pudimos registrar tu aviso. Escríbenos por WhatsApp con tu referencia y lo revisamos.'; er.hidden = false
-    } finally { b.disabled = false; b.textContent = 'Ya pagué' }
+    } finally { b.disabled = false; b.textContent = 'Ya pagué'; $('zona').classList.remove('off') }
   })
   $('nuevoenlace').addEventListener('click', async () => {
     const b = $('nuevoenlace'), n = $('nerr'); b.disabled = true; n.hidden = true

@@ -44,7 +44,7 @@ body.pg { min-height: 100vh; }
 .tiempos li.on { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); }
 .tiempos li.on::before { background: var(--accent); color: #fff; }
 @media (max-width: 480px) { .tiempos { grid-template-columns: minmax(0, 1fr); } }
-#comp { padding: 10px 0; min-height: 0; border: 0; background: none; font-size: 14px; }
+
 
 /* Pedido y compra simples: un solo foco */
 .pg-main { padding-top: 24px; }
@@ -66,3 +66,20 @@ body.pg { min-height: 100vh; }
 .calma { text-align: center; font-size: 13px; color: var(--muted); margin-top: 14px; }
 .linkbtn { background: none; border: 0; padding: 4px; font: inherit; color: var(--muted); text-decoration: underline; cursor: pointer; }
 #monto::after { content: " COP"; font-size: .38em; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+
+/* Comprobante: zona de carga */
+.zona { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 14px; padding: 22px 16px; min-height: 120px; justify-content: center; text-align: center; border: 2px dashed var(--accent-line); border-radius: 14px; background: var(--accent-soft); color: var(--accent); cursor: pointer; transition: background .15s, border-color .15s; }
+.zona:hover, .zona.arrastra { border-color: var(--accent); background: #fff; }
+.zona:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.zona.off { opacity: .5; pointer-events: none; }
+.zona-t { font-weight: 600; color: var(--ink); font-size: 15px; }
+.zona-d { font-size: 13px; color: var(--muted); }
+.zona input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size: 0; }
+.elegido { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); text-align: left; }
+.elegido img { width: 56px; height: 56px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); flex: none; }
+.pdf-i { width: 56px; height: 56px; flex: none; display: grid; place-items: center; border-radius: 10px; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 14px; }
+.el-info { flex: 1; min-width: 0; display: grid; }
+.el-info strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; color: var(--ink); }
+.el-info span { font-size: 13px; color: var(--muted); }
+.pg-main .elegido .btn { margin-top: 0; min-height: 44px; }
+.zona[hidden], .elegido[hidden], .elegido [hidden] { display: none !important; }
