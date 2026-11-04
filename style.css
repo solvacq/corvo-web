@@ -98,6 +98,7 @@ h1, h2, h3, p { margin: 0; }
 
 /* Precios */
 .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 40px; max-width: 760px; margin-inline: auto; text-align: left; }
+.grid2.uno { grid-template-columns: minmax(0, 420px); justify-content: center; }
 @media (max-width: 640px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
 .plan { background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 28px 24px; display: flex; flex-direction: column; }
 .plan.best { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
